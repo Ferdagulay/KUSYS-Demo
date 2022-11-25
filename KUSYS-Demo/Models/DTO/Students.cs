@@ -6,6 +6,7 @@ namespace KUSYS_Demo.Models.DTO
     public class Students
 
     {
+        //This table is out of use. Ignore this table.
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string StudentId { get; set; }

@@ -5,9 +5,15 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+@{
+    string username = User.Identity.Name;
+}
 
-<h4>Student</h4>
+<body>
+    
+ <h4>  Welcome @username !</h4>
+
+<h1>Create Student</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -44,9 +50,18 @@
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
 
+                @if (TempData["msg"] != null)
+                {
+                    <div class="form-group">
+                        <span class="text-info">@TempData["msg"]</span>
+                    </div>
+                }
+
+        
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
+
         </form>
     </div>
 </div>
@@ -54,3 +69,4 @@
 <div>
     <a asp-action="AdminIndex">Back to List</a>
 </div>
+</body>

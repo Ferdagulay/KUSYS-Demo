@@ -3,21 +3,20 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<link href="/css/bootstrap.min.css" rel="stylesheet" />
 @Html.ValidationSummary()
 <div class="container">
     <div class="row">
         <div class="col-md-6 center-block">
-            <h3>Registration</h3>
+            <h3>Sign Up</h3>
             <form asp-action="SignUp" method="post">
                 <div class="form-group">
-                    <label>FName*</label>
-/                    <input type="text" class="form-control" asp-for="FirstName"/>
-                    <span class="text-danger"  asp-validation-for="FirstName"></span>
+                    <label>First Name*</label>
+                    <input type="text" class="form-control" asp-for="FirstName" />
+                    <span class="text-danger" asp-validation-for="FirstName"></span>
                 </div>
 
                 <div class="form-group">
-                    <label>LName*</label>
+                    <label>Last Name*</label>
                     <input type="text" class="form-control" asp-for="LastName" />
                     <span class="text-danger" asp-validation-for="LastName"></span>
                 </div>
@@ -37,7 +36,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Password (eg. John@123)</label>
+                    <label>Password (eg. Anything@123)</label>
                     <input type="password" class="form-control" asp-for="Password" />
                     <span class="text-danger" asp-validation-for="Password"></span>
 
@@ -50,12 +49,12 @@
 
                 </div>
 
-               
-                
+
+
                 @if (TempData["msg"] != null)
                 {
                     <div class="form-group">
-                       <span class="text-info">@TempData["msg"]</span>
+                        <span class="text-info">@TempData["msg"]</span>
                     </div>
                 }
 

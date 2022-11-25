@@ -17,7 +17,8 @@ namespace KUSYS_Demo.Models.Domain
 
 
         public DbSet<Courses> Courses { get; set; }
-        // public DbSet<Students> Students { get; set; }
+
+        // public DbSet<Students> Students { get; set; } REMOVED !!
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         public DbSet<CoursesStudents> CoursesStudents { get; set; }
@@ -26,9 +27,7 @@ namespace KUSYS_Demo.Models.Domain
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
-            string ADMIN_ID = "02174cf0–9412–4cfe-afbf-59f706d72cf6";
-            string ROLE_ID = "341743f0-asd2–42de-afbf-59kmkkmk72cf6";
-
+            // many-to-many approach has been chosen.
 
             builder.Entity<CoursesStudents>()
                 .HasKey(c => new { c.Id, c.CourseId });
@@ -42,11 +41,14 @@ namespace KUSYS_Demo.Models.Domain
                 .HasOne<Courses>(cs => cs.Courses)
                 .WithMany(c => c.CoursesStudents)
                 .HasForeignKey(cs => cs.CourseId);
-            
-     
 
 
-            //seed admin role
+
+            string ADMIN_ID = "02174cf0–9412–4cfe-afbf-59f706d72cf6";
+            string ROLE_ID = "341743f0-asd2–42de-afbf-59kmkkmk72cf6";
+
+            //Seed admin user role.
+
             builder.Entity<IdentityRole>().HasData(new IdentityRole
             {
                 Name = "admin",
@@ -54,7 +56,6 @@ namespace KUSYS_Demo.Models.Domain
                 Id = ROLE_ID,
                 ConcurrencyStamp = ROLE_ID
             });
-
 
 
             //create user
@@ -82,9 +83,6 @@ namespace KUSYS_Demo.Models.Domain
                 RoleId = ROLE_ID,
                 UserId = ADMIN_ID
             });
-
-
-
 
             base.OnModelCreating(builder);
 

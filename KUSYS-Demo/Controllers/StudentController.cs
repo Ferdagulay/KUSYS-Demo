@@ -10,49 +10,23 @@ namespace KUSYS_Demo.Controllers
 {
     public class StudentController : Controller
     {
-        private ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IService<ApplicationUser> _studentsRepository;
 
 
 
-        public StudentController(ApplicationDbContext Context, UserManager<ApplicationUser> userManager, IService<ApplicationUser> studentsRepository)
+        public StudentController(UserManager<ApplicationUser> userManager, IService<ApplicationUser> studentsRepository)
         {
-            _context = Context;
             _userManager = userManager;
             _studentsRepository = studentsRepository;
-
-
         }
-        //public async Task<IActionResult> Index()
-        //{
-
-        //    var Student = await _context.Students.CountAsync();
-
-        //    if (Student == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View();
-        //}
-
-
-        //public ActionResult Index()
-        //{
-
-
-        //    /* var std = db.Pages.Where(s => s.PageId == pages.PageId ).FirstOrDefault();*/
-        //    return View(_context.Students.ToList());
-        //}
-
-
+    
 
         [HttpGet]
         [ProducesResponseType(typeof(List<ApplicationUser>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<ApplicationUser>>> Index()
         {
-            var studentsList = await _studentsRepository.GetAllStudents();
+            var studentsList = await _studentsRepository.GetAll();
 
             if (studentsList is null)
             {
@@ -63,10 +37,22 @@ namespace KUSYS_Demo.Controllers
         }
 
 
+
+
+        public async Task<JsonResult> GetById(string id)
+        {
+            var studentsList = await _studentsRepository.GetById(id);
+
+            return Json(studentsList);
+            //return new JsonResult(Ok());
+        }
+
+
+
+
         // GET: Students/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-
             if (id == null)
             {
                 return NotFound();
@@ -81,9 +67,6 @@ namespace KUSYS_Demo.Controllers
         }
 
 
-
-
-
         // POST: Students/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -93,11 +76,7 @@ namespace KUSYS_Demo.Controllers
             {
                 return BadRequest();
             }
-
-
-
             var oldStudent = await _studentsRepository.GetById(id);
-
             var updatedStudent = new ApplicationUser
             {
                 Id = student.Id,
@@ -106,48 +85,13 @@ namespace KUSYS_Demo.Controllers
                 BirthDate = student.BirthDate
 
             };
-
             await _userManager.UpdateAsync(updatedStudent);
-
-           // await _studentsRepository.Update(updatedStudent, oldStudent);
             return CreatedAtAction(nameof(Edit), new { Id = student.Id }, null);
-
-
-
         }
 
 
 
 
-
-
-
-        //[HttpPost("{id}")]
-        //[ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        //[ProducesResponseType((int)HttpStatusCode.NotFound)]
-        //[ProducesResponseType((int)HttpStatusCode.Created)]
-        //public async Task<ActionResult> Edit(int id, [FromBody] ApplicationUser student)
-        //{
-        //    if (id < 1 || student is null)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    var oldStudent = await _studentsRepository.GetById(id);
-
-        //    var updatedStudent = new ApplicationUser
-        //    {
-        //        Id = student.Id,
-        //        FirstName = student.FirstName,
-        //        LastName = student.LastName,
-        //        BirthDate = student.BirthDate
-
-        //    };
-
-        //    await _studentsRepository.Update(updatedStudent, oldStudent);
-
-        //    return CreatedAtAction(nameof(Edit), new { Id = student.Id}, null);
-        //}
 
 
 

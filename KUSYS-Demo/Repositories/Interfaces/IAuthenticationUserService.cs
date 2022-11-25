@@ -5,8 +5,7 @@ namespace KUSYS_Demo.Repositories.Interfaces
 {
     public interface IAuthenticationUserService
     {
-        //Task<Status> LoginAsync(LoginModel model);
-      //  Task LogoutAsync();
+      
         Task<Response> Register(RegisterModel model);
 
         Task<Response> Login(LoginModel model);
@@ -15,10 +14,7 @@ namespace KUSYS_Demo.Repositories.Interfaces
         Task LogoutService();
 
 
-
-
-
-        // Task<Status> ChangePasswordAsync(ChangePasswordModel model, string username);
+        // Task<Status> ChangePassword(ChangePasswordModel model, string username); // It can be added.
 
     }
 }

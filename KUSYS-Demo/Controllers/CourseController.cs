@@ -33,7 +33,7 @@ namespace KUSYS_Demo.Controllers
         [ProducesResponseType(typeof(List<ApplicationUser>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<Courses>>> Index()
         {
-            var courseList = await _coursesRepository.GetAllStudents();
+            var courseList = await _coursesRepository.GetAll();
 
             if (courseList is null)
             {
@@ -67,7 +67,7 @@ namespace KUSYS_Demo.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Created)]
-        public async Task<JsonResult> PostNameAsync(string Courseid , string username)
+        public async Task<JsonResult> PostName(string Courseid , string username)
         {
 
             if (Courseid is null || username is null)
@@ -83,7 +83,7 @@ namespace KUSYS_Demo.Controllers
 
 
             return new JsonResult(Ok());
-            // return RedirectToAction(nameof(AdminIndex));
+            //return RedirectToAction(nameof(SelectedCourseIndex), Ok());
 
         }
 

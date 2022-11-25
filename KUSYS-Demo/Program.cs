@@ -26,18 +26,11 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 
-
-
 // For Dependency Injection
 
 builder.Services.AddScoped<IAuthenticationUserService, AuthenticationUserService>();
 builder.Services.AddScoped<IService<KUSYS_Demo.Models.Domain.ApplicationUser>, StudentService>();
 builder.Services.AddScoped<IService<KUSYS_Demo.Models.DTO.Courses>, CourseService>();
-
-
-// For RazorPages
-
-//  builder.Services.AddRazorPages();
 
 
 var app = builder.Build();
@@ -57,7 +50,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
+//Db Seeding with my Initializer function
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -69,6 +62,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 
+// Routings
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Authenticate}/{action=Login}/{id?}");

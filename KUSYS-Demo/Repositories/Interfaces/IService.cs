@@ -8,11 +8,12 @@ namespace KUSYS_Demo.Repositories.Interfaces
 
 
         Task<TEntity> GetById(string id);
-        // Task Add(TEntity entity);
+
+        // Task Add(TEntity entity); It can be added here. But I choosed different way to add new records.
         Task Update(TEntity dbEntity, TEntity entity);
         Task Delete(TEntity entity);
 
-        Task<IEnumerable<TEntity>> GetAllStudents();
+        Task<IEnumerable<TEntity>> GetAll();
 
         Task<List<CoursesStudents>> GetSelectedCourseByUserID(string username);
 

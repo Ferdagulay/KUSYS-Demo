@@ -12,7 +12,7 @@ namespace KUSYS_Demo.Models.DTO
 
         public string Id { get; set; }
 
-        // public virtual Students Students { get; set; }
+        // public virtual Students Students { get; set; } REMOVED !!
 
         public virtual ApplicationUser ApplicationUsers { get; set; }
 

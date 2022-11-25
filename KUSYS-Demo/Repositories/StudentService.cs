@@ -22,14 +22,9 @@ namespace KUSYS_Demo.Repositories
         }
 
 
+        // Returned the result as my special Response class just for example.
         public async Task<Response> AddStudent(RegisterModel entity)
-        {
-
-            //_context.Add(entity);
-            //await _context.SaveChangesAsync();
-
-            // await _userManager.AddToRoleAsync(entity);
-
+        { 
             var status = new Response();
 
             ApplicationUser user = new ApplicationUser()
@@ -60,11 +55,8 @@ namespace KUSYS_Demo.Repositories
             }
 
             status.StatusCode = 1;
-            status.Message = "You have registered successfully";
+            status.Message = "Successful";
             return status;
-
-
-
         }
 
         public async Task Delete(ApplicationUser entity)
@@ -86,9 +78,9 @@ namespace KUSYS_Demo.Repositories
             }).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<ApplicationUser>> GetAllStudents()
+        public async Task<IEnumerable<ApplicationUser>> GetAll()
         {
-            //return await _context.Students.ToListAsync();
+            //return await _context.Students.ToListAsync(); This is the another way to do this. You can do the same thing in one row.
             return await _context.ApplicationUsers.Select(a => new ApplicationUser
             {
 
@@ -102,40 +94,41 @@ namespace KUSYS_Demo.Repositories
 
 
 
-
-
-
         public async Task<List<CoursesStudents>> GetSelectedCourseByUserID(string username)
         {
 
+            // Created an empty list of selected courses to store end return data.
             List<CoursesStudents> coursematch = new List<CoursesStudents>();
 
-
+            // Getting current username's object.
             var student = await _userManager.FindByNameAsync(username);
 
+            // Created a list of selected courses by current user.
             List<CoursesStudents> courseList = _context.CoursesStudents.Where(a => a.ApplicationUsers.Id == student.Id).ToList();
 
-           
-
-            CoursesStudents cs = new CoursesStudents();
+            // It is Foreach to traverse in courselist.
             foreach (var course in courseList)
             {
-                var courseobj = _context.Courses.Where(a => a.CourseId == course.CourseId).FirstOrDefault();
+                // Created a CoursesStudents object to store data as List of CourseStudents.
+                CoursesStudents cs = new CoursesStudents();
 
+                // Created a List to store Course objects 
+                var courseobj = _context.Courses.Where(a => a.CourseId == course.CourseId).ToList();
+
+                // Binding the result data to CoursesStudents object.
                 cs.ApplicationUsers = student;
                 cs.CourseId = course.CourseId;
                 cs.Id = student.Id;
-                cs.Courses = courseobj;
 
+                foreach (var item in courseobj)
+                {
+                    cs.Courses = item;
+
+                }
+                // Adding CoursesStudents objects to List of CoursesStudents object and then returning this value.
                 coursematch.Add(cs);
-
             }
-
             return coursematch;
-
-
-
-
         }
 
 

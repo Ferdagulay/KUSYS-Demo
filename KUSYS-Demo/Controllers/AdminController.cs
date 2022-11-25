@@ -11,54 +11,41 @@ namespace KUSYS_Demo.Controllers
 {
     public class AdminController : Controller
     {
-        private ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
+
         private readonly IService<ApplicationUser> _studentsRepository;
+        private readonly IAuthenticationUserService _authService;
 
-
-        public AdminController(ApplicationDbContext Context, UserManager<ApplicationUser> userManager, IService<ApplicationUser> studentsRepository)
+        public AdminController(IService<ApplicationUser> studentsRepository, IAuthenticationUserService authService)
         {
-            _context = Context;
-            _userManager = userManager;
+            _authService = authService;
             _studentsRepository = studentsRepository;
-
-
         }
 
-        //[Authorize(Roles = "admin")]
-        //public IActionResult AdminIndex()
-        //{
-        //    return View();
-        //}
 
-   
+
 
         [HttpGet]
         [ProducesResponseType(typeof(List<ApplicationUser>), (int)HttpStatusCode.OK)]
         [Authorize(Roles = "admin")]
 
         public async Task<ActionResult<IEnumerable<ApplicationUser>>> AdminIndex()
+        {
+            var studentsList = await _studentsRepository.GetAll();
+            if (studentsList is null)
             {
-                var studentsList = await _studentsRepository.GetAllStudents();
-
-                if (studentsList is null)
-                {
-                    return Ok();
-                }
-
-                return View(studentsList);
+                return Ok();
             }
+            return View(studentsList);
+        }
 
 
         // GET: Students/Edit/5
         public async Task<ActionResult> Edit(string id)
         {
-
             if (id == null)
             {
                 return NotFound();
             }
-
             var student = await _studentsRepository.GetById(id);
             if (student == null)
             {
@@ -77,28 +64,24 @@ namespace KUSYS_Demo.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         public async Task<IActionResult> Edit(string id, [Bind("Id,FirstName,LastName,BirthDate")] ApplicationUser student)
+        {
+            if (student is null)
             {
-                if (student is null)
-                {
-                    return BadRequest();
-                }
+                return BadRequest();
+            }
 
+            var oldStudent = await _studentsRepository.GetById(id);
+            var updatedStudent = new ApplicationUser
+            {
+                Id = student.Id,
+                FirstName = student.FirstName,
+                LastName = student.LastName,
+                BirthDate = student.BirthDate
 
+            };
 
-                var oldStudent = await _studentsRepository.GetById(id);
-
-                var updatedStudent = new ApplicationUser
-                {
-                    Id = student.Id,
-                    FirstName = student.FirstName,
-                    LastName = student.LastName,
-                    BirthDate = student.BirthDate
-
-                };
-
-                await _studentsRepository.Update(oldStudent , updatedStudent);
+            await _studentsRepository.Update(oldStudent, updatedStudent);
             return RedirectToAction(nameof(AdminIndex), null);
-           // return RedirectToAction(nameof(AdminIndex));
 
         }
 
@@ -133,11 +116,8 @@ namespace KUSYS_Demo.Controllers
             {
                 return BadRequest();
             }
-            var dbEntity  = await _studentsRepository.GetById(id);
-     
-            
-
-             await _studentsRepository.Delete(dbEntity);
+            var dbEntity = await _studentsRepository.GetById(id);
+            await _studentsRepository.Delete(dbEntity);
             return RedirectToAction(nameof(AdminIndex), null);
         }
 
@@ -155,15 +135,16 @@ namespace KUSYS_Demo.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,BirthDate")] RegisterModel student)
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,BirthDate, Email, Password, Username")] RegisterModel student)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(student);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(student);
+            student.Role = "user";
+
+            // Authservisce altındaki Register metodunu çağırıyor.
+
+            var result = await this._authService.Register(student);
+            TempData["msg"] = result.Message;
+            return RedirectToAction(nameof(AdminIndex));
+
         }
 
 

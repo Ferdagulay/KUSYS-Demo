@@ -95,6 +95,7 @@ namespace KUSYS_Demo.Repositories
             {
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
+                BirthDate = model.BirthDate,
                 UserName = model.Username,
                 FirstName = model.FirstName,
                 LastName = model.LastName,

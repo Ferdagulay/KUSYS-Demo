@@ -4,6 +4,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@{
+    string username = User.Identity.Name;
+}
+
+@{
+    ViewData["Title"] = "AdminIndex";
+}
 
 <!DOCTYPE html>
 
@@ -30,10 +37,6 @@
         }
 
 
-
-
-
-
     </style>
 
 
@@ -44,10 +47,10 @@
 </head>
 
 <body>
-
+    <h4>  Welcome @username !</h4>
 
     <div class="container-xl">
-        <div class="table-responsive">
+        <div class="table-responsive" style="overflow-x: hidden;">
             <div class="table-wrapper">
                 <div class="table-title">
                     <div class="row">
@@ -89,15 +92,9 @@
                                     @Html.ActionLink("Create", "Create", new { id = item.Id })|
                                     @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
                                     @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-
-
-
                                 </td>
 
-
                             </tr>
-
-
                         }
 
 

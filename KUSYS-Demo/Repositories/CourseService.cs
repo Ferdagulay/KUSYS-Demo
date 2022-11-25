@@ -20,7 +20,7 @@ namespace KUSYS_Demo.Repositories
             //_roleManager = roleManager;
 
         }
-        public async Task<IEnumerable<Courses>> GetAllStudents()
+        public async Task<IEnumerable<Courses>> GetAll()
         {
             return await _context.Courses.ToListAsync();
         }
@@ -37,12 +37,8 @@ namespace KUSYS_Demo.Repositories
             cs.Id = user.Id;
             cs.ApplicationUsers = user;
             cs.Courses = course;
-
             _context.Add(cs);
             await _context.SaveChangesAsync();
-
-            //return RedirectToAction(nameof(Index));
-
         }
 
 
